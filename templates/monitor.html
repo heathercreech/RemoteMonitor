@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/default.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/monitor.css') }}">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		
+		<script type="text/javascript">$SCRIPT_ROOT = {{request.script_root|tojson|safe}};</script>
+		<script src="{{ url_for('static', filename='js/third-party/Chart/Chart.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/plot.js') }}"></script>
+	</head>
+	
+	<body>
+		<div id="AppContent">
+			<div class="app-item">
+				<h3>CPU Usage (%)</h3>
+				<canvas id="cpu-usage" width="200" height="200"></canvas>
+			</div>
+			
+			<div class="app-item">
+				<h3>CPU Temperature (C)</h3>
+				<canvas id="cpu-temperature" width="200" height="200"></canvas>
+			</div>
+			
+			<div class="app-item">
+				<h3>GPU Usage (%)</h3>
+				<canvas id="gpu-usage" width="200" height="200"></canvas>
+			</div>
+			
+			<div class="app-item">
+				<h3>GPU Temperature (C)</h3>
+				<canvas id="gpu-temperature" width="200" height="200"></canvas>
+			</div>
+		</div>
+		
+		
+	</body>
+	
+	<script type="text/javascript">
+		/*var data = {
+			labels: ["January", "Feburary", "March"],
+			datasets: [
+				{
+					label: "Dataset",
+					fillColor: "rgba(220,220,220,0.2)",
+					strokeColor: "rgba(220,220,220,1)",
+					pointColor: "rgba(220,220,220,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(220,220,220,1)",
+					data: {{ temp() }}
+				}
+			]
+		}
+		
+		
+		var ctx = $("#myChart").get(0).getContext("2d");
+		var chart = new Chart(ctx).Line(data, {});
+		*/
+		
+		addLineChart("cpu-usage", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
+		addLineChart("cpu-temperature", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
+		addLineChart("gpu-usage", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
+		addLineChart("gpu-temperature", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
+		
+		/*
+		max_values = 20;
+		current_values = [];
+		
+		function refreshCPUInfo(){
+			$.getJSON($SCRIPT_ROOT + "/monitor_request", {}, function(data){
+				current_values.push(data["cpu"]["usage"]);
+				if(current_values.length >= max_values){
+					current_values.splice(0,1);
+				}
+			});
+		};
+		
+		function autoRefresh(){
+			refreshCPUInfo();
+			window.setTimeout(autoRefresh, 5000);
+		}
+		
+		
+		$(function(){
+			$("#CPUButton").bind("click", function(){
+				refreshCPUInfo();
+			});
+		});
+		
+		
+		$(function(){
+			autoRefresh();
+		});*/
+	</script>
+</html>

@@ -1,0 +1,39 @@
+form{
+	height: 100vh;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center
+}
+
+
+input{
+	height: 50px;
+	width: 250px;
+	
+	font-size: 24px;
+	
+	color: rgb(220,220,220);
+	background: rgb(40,40,40);
+	
+	border: 0;
+	padding: 10px;
+	
+	align-self: center;
+}
+
+
+input:not([type="submit"]){
+}
+
+
+input[type="submit"]{
+	cursor: pointer;
+	
+	box-sizing: content-box;
+}
+
+
+input[type="submit"]:hover{
+	background: rgb(30,30,30);
+}
