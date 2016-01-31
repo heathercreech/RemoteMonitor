@@ -1,6 +1,6 @@
 import hashlib
 import json
-
+from rmon_data_manager import ClientDataManager
 
 default_json_object = {"users": {}, "settings": {"next_id": 0, "deleted_ids": []}}
 
@@ -8,7 +8,7 @@ default_json_object = {"users": {}, "settings": {"next_id": 0, "deleted_ids": []
 def hashPassword(password):
 	return hashlib.sha256(password).digest()
 
-
+		
 #handles adding users, checking passwords, and getting the user data out of it
 class RMUserDatabase:
 	
@@ -18,6 +18,7 @@ class RMUserDatabase:
 		db_file_data = json.loads(self.loadUserData())
 		
 		self.users = db_file_data["users"]
+		self.client_data = ClientDataManager(db_file_data["client_data"])
 		self.settings = db_file_data["settings"]
 		
 	
@@ -44,8 +45,9 @@ class RMUserDatabase:
 		
 		
 	def saveUserData(self):
+		print(json.dumps(self.users))
 		with open(self.filepath, "w") as db_file:
-			db_file.write(json.dumps({"users": self.users, "settings": self.settings}))
+			db_file.write(json.dumps({"settings": self.settings, "users": self.users, "client_data": self.client_data.getData()}))
 	
 	
 	#Utility methods
@@ -78,12 +80,14 @@ class RMUserDatabase:
 	
 	#Setters
 	def setUserData(self, username, data):
-		self.users.update({username: data})
+		self.users[username] = data
 	
 	
 	#Database modification methods
 	def addUser(self, username, ip_addresses, password):
-		self.setUserData(username, {"id": self.getNextId(), "ip_addresses": ip_addresses, "password_hash": hashPassword(password.encode("utf-16")).decode("utf-16")})
+		self.setUserData(username, {"id": self.getNextId(), "ip_addresses": [], "password_hash": hashPassword(password.encode("utf-16")).decode("utf-16")})
+		for ip in ip_addresses:
+			self.addIPAddress(username, ip)
 		
 	
 	def removeUser(self, username):
@@ -93,3 +97,4 @@ class RMUserDatabase:
 	
 	def addIPAddress(self, username, ip):
 		self.getClientIPs(username).append(ip)
+		self.client_data.addIP(ip, "")
