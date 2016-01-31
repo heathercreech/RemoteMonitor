@@ -1,10 +1,8 @@
 import psutil
 
-
 network = psutil.net_io_counters
 memory = psutil.virtual_memory
 cpu_perc = psutil.cpu_percent
-cpu_times = psutil.cpu_times
 
 
 #HELPER FUNCTIONS
