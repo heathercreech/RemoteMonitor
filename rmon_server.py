@@ -33,7 +33,7 @@ def register():
 		if password == confirm and len(password) >= 6:
 			if username not in database.users:
 				database.addUser(username, [], password)
-				return redirect(url_for("home"))
+				return redirect(url_for("login"))
 	return render_template("register.html")
 	
 
@@ -80,6 +80,8 @@ if __name__ == "__main__":
 	
 	updateJinja(temp)
 	database = RMUserDatabase(database_filename)
+	
+	
 	
 	app.run(debug=True)
 	database.saveUserData()
