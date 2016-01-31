@@ -12,6 +12,7 @@ This application is not ready for use.
 ## Current Plans
 (The following list is in no particular order)
 
+- Automate client data collection
 - Sanitize input before insertion into database
 
 
