@@ -1,7 +1,9 @@
+from os import urandom
 from flask import Flask, session, escape, request, redirect, url_for
 from flask import render_template
 import json
 from rmon_database import RMUserDatabase
+from rmon_requests import sendClientRequest
 
 
 app = Flask(__name__)
@@ -12,7 +14,6 @@ def login():
 	global database
 	
 	if request.method == "POST":
-		print(request)
 		if database.checkPassword(request.form["username"], request.form["password"]):
 			session["username"] = request.form["username"]
 			return redirect(url_for("home"))
@@ -35,6 +36,11 @@ def register():
 				return redirect(url_for("home"))
 	return render_template("register.html")
 	
+
+@app.route("/help")
+def help():
+	pass
+	
 	
 #updates the Jinja env globals with a function name
 def updateJinja(func):
@@ -47,8 +53,14 @@ def temp():
 
 	
 def getSecretKey(filepath):
-	with open(filepath) as sk_file:
-		return sk_file.readline()
+	try:
+		with open(filepath) as sk_file:
+			return sk_file.readline()
+	except FileNotFoundError:
+		generated_key = str(urandom(50))
+		with open(filepath, "w") as sk_file:
+			sk_file.write(generated_key)
+			return generated_key
 
 	
 @app.route('/')
@@ -68,5 +80,6 @@ if __name__ == "__main__":
 	
 	updateJinja(temp)
 	database = RMUserDatabase(database_filename)
+	
 	app.run(debug=True)
 	database.saveUserData()
