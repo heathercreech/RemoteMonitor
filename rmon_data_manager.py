@@ -8,13 +8,13 @@ class ClientDataManager:
 		self.data = json_obj;
 		
 		
-	def getData():
+	def getData(self):
 		return self.data
 	
 	
-	#Client name is a user-friendly version of the specificied IP addresses name, this enabled easy identification of what machine the data belongs to
-	def addIP(self, ip, client_name):
-		self.data[ip] = {"client_name": client_name, "data_entries": {}}
+	#friendly_name is a user-friendly version of the specificied IP addresses name, this enabled easy identification of what machine the data belongs to
+	def addIP(self, ip, friendly_name):
+		self.data[ip] = {"friendly_name": friendly_name, "data_entries": {}}
 	
 	
 	def getIPData(self, ip):
@@ -26,5 +26,5 @@ class ClientDataManager:
 		
 		while len(self.getIPData(ip)) >= max_client_records:
 			self.getIPData(ip).pop(0)
-		self.getIPData(ip)[datetime.fromtimestamp(time()).strftime("%Y-%m-%dT%H:%M:%S")] = data
-		self.getIPData(ip).sort() #Might need to move this to another function (getter?) in case writting to a JSON file rearranges it (maybe use an OrderedDict instead)
+		self.getIPData(ip)["data_entries"][datetime.fromtimestamp(time()).strftime("%Y-%m-%dT%H:%M:%S")] = data
+		#sort here
