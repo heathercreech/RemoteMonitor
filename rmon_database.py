@@ -2,7 +2,7 @@ import hashlib
 import json
 from rmon_data_manager import ClientDataManager
 
-default_json_object = {"users": {}, "settings": {"next_id": 0, "deleted_ids": []}}
+default_json_object = {"users": {}, "settings": {"next_id": 0, "deleted_ids": []}, "client_data": {}}
 
 
 def hashPassword(password):
@@ -15,7 +15,7 @@ class RMUserDatabase:
 	def __init__(self, database_filepath):
 		self.filepath = database_filepath
 		
-		db_file_data = json.loads(self.loadUserData())
+		db_file_data = self.loadUserData()
 		
 		self.users = db_file_data["users"]
 		self.client_data = ClientDataManager(db_file_data["client_data"])
@@ -38,10 +38,12 @@ class RMUserDatabase:
 			database_text = ""
 			with open(self.filepath) as db_file:
 				database_text = db_file.readline().rstrip("\n")
-			return database_text
-		except FileNotFoundError:
+			if len(database_text) == 0:
+				raise Exception("Database empty")
+			return json.loads(database_text)
+		except (FileNotFoundError, Exception):
 			print("File '", self.filepath, "' does not exist.")
-			return json.dumps(default_json_object)
+			return default_json_object
 		
 		
 	def saveUserData(self):
