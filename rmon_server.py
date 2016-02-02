@@ -2,11 +2,15 @@ from os import urandom
 from flask import Flask, session, escape, request, redirect, url_for
 from flask import render_template
 import json
+import threading
 from rmon_database import RMUserDatabase
 from rmon_requests import sendClientRequest
 
 
 app = Flask(__name__)
+
+
+auto_update_seconds = 5
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -62,13 +66,23 @@ def getSecretKey(filepath):
 			sk_file.write(generated_key)
 			return generated_key
 
+
+def recurringUpdate(ip_address):
+	database.client_data.addDataEntry(ip_address, sendClientRequest(ip_address))
+	print(database.client_data.getIPData(ip_address)["data_entries"])
+	threading.Timer(auto_update_seconds, recurringUpdate, args=(ip_address,)).start()
+	
 	
 @app.route('/')
 def home():
 	if "username" in session:
+		for ip in database.getClientIPs(session["username"]):
+			recurringUpdate(ip)
+			pass
 		return render_template("monitor.html")
 	else:
 		return redirect(url_for("login"))
+
 
 	
 if __name__ == "__main__":
@@ -80,8 +94,6 @@ if __name__ == "__main__":
 	
 	updateJinja(temp)
 	database = RMUserDatabase(database_filename)
-	
-	
 	
 	app.run(debug=True)
 	database.saveUserData()
