@@ -2,6 +2,7 @@ import hashlib
 import json
 from rmon_data_manager import ClientDataManager
 
+
 default_json_object = {"users": {}, "settings": {"next_id": 0, "deleted_ids": []}, "client_data": {}}
 
 
@@ -47,7 +48,6 @@ class RMUserDatabase:
 		
 		
 	def saveUserData(self):
-		print(json.dumps(self.users))
 		with open(self.filepath, "w") as db_file:
 			db_file.write(json.dumps({"settings": self.settings, "users": self.users, "client_data": self.client_data.getData()}))
 	
