@@ -9,8 +9,8 @@ from rmon_requests import sendClientRequest
 
 app = Flask(__name__)
 
-
-auto_update_seconds = 5
+updates_per_day = 4
+auto_update_seconds = 86400 / updates_per_day
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -67,18 +67,18 @@ def getSecretKey(filepath):
 			return generated_key
 
 
-def recurringUpdate(ip_address):
-	database.client_data.addDataEntry(ip_address, sendClientRequest(ip_address))
-	print(database.client_data.getIPData(ip_address)["data_entries"])
-	threading.Timer(auto_update_seconds, recurringUpdate, args=(ip_address,)).start()
+#temporary function - implemented for speed of development
+def recurringUpdate():
+	for user in database.users:
+		for ip_address in database.getClientIPs(user):
+			database.client_data.addDataEntry(ip_address, sendClientRequest(ip_address))
+			print("a")
+	threading.Timer(auto_update_seconds, recurringUpdate).start()
 	
 	
 @app.route('/')
 def home():
 	if "username" in session:
-		for ip in database.getClientIPs(session["username"]):
-			recurringUpdate(ip)
-			pass
 		return render_template("monitor.html")
 	else:
 		return redirect(url_for("login"))
@@ -94,6 +94,8 @@ if __name__ == "__main__":
 	
 	updateJinja(temp)
 	database = RMUserDatabase(database_filename)
+	
+	recurringUpdate() #start the update cycle
 	
 	app.run(debug=True)
 	database.saveUserData()
