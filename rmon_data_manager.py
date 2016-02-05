@@ -1,6 +1,19 @@
 from time import time, strftime
 from datetime import datetime
 
+
+#ground work for future changes (will move this into a module with the default database class)
+class DataManager:
+	
+	def __init__(self):
+		pass
+	
+	
+	def getData(self):
+		pass
+
+
+
 max_client_records = 120 #number of records allowed per client in their data_entries
 
 class ClientDataManager:
@@ -28,3 +41,10 @@ class ClientDataManager:
 			self.getIPData(ip).pop(0)
 		self.getIPData(ip)["data_entries"][datetime.fromtimestamp(time()).strftime("%Y-%m-%dT%H:%M:%S")] = data
 		#sort here
+
+
+#groundwork for future changes
+class UserDataManager:
+	
+	def __init__(self):
+		pass
