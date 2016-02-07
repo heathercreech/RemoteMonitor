@@ -89,8 +89,7 @@ if __name__ == "__main__":
 	database = {}
 	
 	app.secret_key = getSecretKey("secret_key.cfg")
-	
-	updateJinja(temp)
+
 	updateJinja(updateClientData)
 	database = RMUserDatabase(database_filename)
 	
