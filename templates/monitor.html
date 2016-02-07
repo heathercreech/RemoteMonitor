@@ -14,7 +14,7 @@
 		<div id="AppContent">
 			<div class="app-item">
 				<h3>CPU Usage (%)</h3>
-				<canvas id="cpu-usage" width="200" height="200"></canvas>
+				<canvas id="cpu_usage" width="200" height="200"></canvas>
 			</div>
 			
 			<div class="app-item">
@@ -37,60 +37,37 @@
 	</body>
 	
 	<script type="text/javascript">
-		/*var data = {
-			labels: ["January", "Feburary", "March"],
-			datasets: [
-				{
-					label: "Dataset",
-					fillColor: "rgba(220,220,220,0.2)",
-					strokeColor: "rgba(220,220,220,1)",
-					pointColor: "rgba(220,220,220,1)",
-					pointStrokeColor: "#fff",
-					pointHighlightFill: "#fff",
-					pointHighlightStroke: "rgba(220,220,220,1)",
-					data: {{ temp() }}
-				}
-			]
+		addLineChart("cpu_usage", formatData([], []));
+		
+		
+		//time the auto update
+		var update_time = 3 * 1000;
+		
+		function handleData(data){
+			var d = new Date(), e = new Date(d);
+			var ms_since_midnight = e - d.setHours(0,0,0,0);
+			
+			var cpu_graph = charts[0].value;
+			if(cpu_graph.datasets[0].points.length > 10){
+				cpu_graph.removeData();
+			}
+			cpu_graph.addData([data.cpu.usage], "");
 		}
 		
 		
-		var ctx = $("#myChart").get(0).getContext("2d");
-		var chart = new Chart(ctx).Line(data, {});
-		*/
-		
-		addLineChart("cpu-usage", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
-		addLineChart("cpu-temperature", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
-		addLineChart("gpu-usage", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
-		addLineChart("gpu-temperature", formatData(["a", "b", "c", "d", "e",], {{ temp() }}));
-		
-		/*
-		max_values = 20;
-		current_values = [];
-		
-		function refreshCPUInfo(){
-			$.getJSON($SCRIPT_ROOT + "/monitor_request", {}, function(data){
-				current_values.push(data["cpu"]["usage"]);
-				if(current_values.length >= max_values){
-					current_values.splice(0,1);
+		(function callUpdate(){
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function(){
+				if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+					var data = JSON.parse(xmlhttp.responseText);
+					handleData(data);
 				}
-			});
-		};
+			};
+			xmlhttp.open("GET", "/update", true);
+			xmlhttp.send();			
+			
+			setTimeout(callUpdate, update_time);
+		})(); //define and call the function at the same time
 		
-		function autoRefresh(){
-			refreshCPUInfo();
-			window.setTimeout(autoRefresh, 5000);
-		}
-		
-		
-		$(function(){
-			$("#CPUButton").bind("click", function(){
-				refreshCPUInfo();
-			});
-		});
-		
-		
-		$(function(){
-			autoRefresh();
-		});*/
 	</script>
 </html>
