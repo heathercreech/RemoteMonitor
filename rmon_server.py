@@ -50,11 +50,6 @@ def help():
 def updateJinja(func):
 	app.jinja_env.globals[func.__name__] = func
 
-
-#temporary function to get data into the charts
-def temp():
-	return [1,60,11,25,30,9]
-
 	
 def getSecretKey(filepath):
 	try:
@@ -67,13 +62,16 @@ def getSecretKey(filepath):
 			return generated_key
 
 
-#temporary function - implemented for speed of development
-def recurringUpdate():
-	for user in database.users:
-		for ip_address in database.getClientIPs(user):
-			database.client_data.addDataEntry(ip_address, sendClientRequest(ip_address))
-			print("a")
-	threading.Timer(auto_update_seconds, recurringUpdate).start()
+#monitor.html sends requests here to get updated client data
+@app.route('/update')
+def updateClientData():
+	if "username" in session:
+		for ip_address in database.getClientIPs(session["username"]):
+			data = sendClientRequest(ip_address);
+			#database.client_data.addDataEntry(ip_address, sendClientRequest(ip_address))
+		return json.dumps(data);
+	else:
+		return redirect(url_for("login"))
 	
 	
 @app.route('/')
@@ -93,9 +91,10 @@ if __name__ == "__main__":
 	app.secret_key = getSecretKey("secret_key.cfg")
 	
 	updateJinja(temp)
+	updateJinja(updateClientData)
 	database = RMUserDatabase(database_filename)
 	
-	recurringUpdate() #start the update cycle
+	#recurringUpdate() #start the update cycle
 	
 	app.run(debug=True)
 	database.saveUserData()
