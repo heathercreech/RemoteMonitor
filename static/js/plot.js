@@ -2,7 +2,7 @@
 //	Charts.js
 
 
-var charts = {}
+var charts = []
 
 
 //creates a chart's data structure from an array of labels and raw data
@@ -31,11 +31,17 @@ function getChartContext(chart_id){
 
 
 function addLineChart(chart_id, data){
-	charts[chart_id] = new Chart(getChartContext(chart_id)).Line(data, {scaleLineColor: "rgba(200,200,200,1)", scaleFontColor: "rgba(200,200,200,1)"});
-}
-
-
-function updateChart(chart_id, data){
-	charts[chart_id].datasets[0] = data;
-	charts[chart_id].update();
+	charts.push({
+		key: chart_id,
+		value: new Chart(getChartContext(chart_id)).Line(data, {
+			scaleLineColor: "rgba(200,200,200,1)",
+			scaleFontColor: "rgba(200,200,200,1)",
+			scaleOverride: true,
+			scaleSteps: 10,
+			scaleStepWidth: 10,
+			scaleStartValue: 0,
+			scaleBeginsAtZero: true,
+			animationSteps: 15
+		})
+	});
 }
