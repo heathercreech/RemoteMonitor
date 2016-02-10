@@ -1,13 +1,16 @@
 from os import urandom
-from flask import Flask, session, escape, request, redirect, url_for
-from flask import render_template
 import json
 import threading
+
+from flask import Flask, session, escape, request, redirect, url_for
+from flask import render_template
+
 from rmon_database import RMUserDatabase
 from rmon_requests import sendClientRequest
 
 
 app = Flask(__name__)
+
 
 updates_per_day = 4
 auto_update_seconds = 86400 / updates_per_day
@@ -82,7 +85,6 @@ def home():
 		return redirect(url_for("login"))
 
 
-	
 if __name__ == "__main__":
 	
 	database_filename = "database.json"
