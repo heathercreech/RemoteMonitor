@@ -1,11 +1,10 @@
 HIGH PRIORITY
 
-Create framework for adding more graphs and their respective info
-
 
 
 MEDIUM PRIORITY
 
+Create system to set scale values based on info type (i.e. set percentage scales from 0-100)
 Sanitize input into database
 
 
