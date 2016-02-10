@@ -19,5 +19,4 @@ This application is not ready for use.
 ## Future Plans
 (The following list is in no particular order)
 
-- Move the responsibility of timing update requests to the client (requires the server to accept API requests from the client; this would be in addition to the client accepting API requests from the server to allow manual submission of requests)
 - I am probably going to split RMUserDatabase into a RMDatabase class (removing the responsibility for user specific data and allowing any multitude of tables) and several *DataManager class, much like the current ClientDataManager
