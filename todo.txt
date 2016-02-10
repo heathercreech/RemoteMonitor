@@ -1,0 +1,9 @@
+HIGH PRIORITY
+
+Create framework for adding more graphs and their respective info
+
+
+
+LOW PRIORITY
+
+Get more info from the client
