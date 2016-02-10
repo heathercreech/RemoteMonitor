@@ -12,48 +12,37 @@
 	
 	<body>
 		<div id="AppContent">
-			<div class="app-item">
-				<h3>CPU Usage (%)</h3>
-				<canvas id="cpu_usage" width="200" height="200"></canvas>
-			</div>
-			
-			<div class="app-item">
-				<h3>CPU Temperature (C)</h3>
-				<canvas id="cpu-temperature" width="200" height="200"></canvas>
-			</div>
-			
-			<div class="app-item">
-				<h3>GPU Usage (%)</h3>
-				<canvas id="gpu-usage" width="200" height="200"></canvas>
-			</div>
-			
-			<div class="app-item">
-				<h3>GPU Temperature (C)</h3>
-				<canvas id="gpu-temperature" width="200" height="200"></canvas>
-			</div>
 		</div>
 		
 		
 	</body>
 	
 	<script type="text/javascript">
-		addLineChart("cpu_usage", formatData([], []));
+		var charts_setup = false;
+		
+		
+		function handleData(data){
+			var app_content = $("#AppContent");
+			
+			
+			for(entry in data){
+				for(client_value in data[entry]){
+					if (!charts_setup){
+						app_content.append(generateChart(entry, client_value));
+					}
+					var chart_id = entry + "_" + client_value;
+					addChartPoint(chart_id, data[entry][client_value]);
+				}
+			}
+			
+			if(!charts_setup){
+				charts_setup = true;
+			}
+		}
 		
 		
 		//time the auto update
 		var update_time = 3 * 1000;
-		
-		function handleData(data){
-			var d = new Date(), e = new Date(d);
-			var ms_since_midnight = e - d.setHours(0,0,0,0);
-			
-			var cpu_graph = charts[0].value;
-			if(cpu_graph.datasets[0].points.length > 10){
-				cpu_graph.removeData();
-			}
-			cpu_graph.addData([data.cpu.usage], "");
-		}
-		
 		
 		(function callUpdate(){
 			var xmlhttp = new XMLHttpRequest();
