@@ -1,0 +1,7 @@
+*.cfg
+*.json
+htmlplot*/
+Include*/
+Lib*/
+Scripts*/
+__pycache__*/
