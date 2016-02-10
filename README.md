@@ -16,7 +16,7 @@ This application is not ready for use.
 - Sanitize input before insertion into database
 
 
-## Future Plans
+## Future Possibilities
 (The following list is in no particular order)
 
 - I am probably going to split RMUserDatabase into a RMDatabase class (removing the responsibility for user specific data and allowing any multitude of tables) and several *DataManager class, much like the current ClientDataManager
