@@ -4,6 +4,12 @@ Create framework for adding more graphs and their respective info
 
 
 
+MEDIUM PRIORITY
+
+Sanitize input into database
+
+
+
 LOW PRIORITY
 
 Get more info from the client
