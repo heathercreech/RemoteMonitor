@@ -20,12 +20,15 @@ auto_update_seconds = 86400 / updates_per_day
 def login():
 	global database
 	
-	if request.method == "POST":
+	if "username" in session:
+		return redirect(url_for("home"))
+	elif request.method == "POST":
 		if database.checkPassword(request.form["username"], request.form["password"]):
 			session["username"] = request.form["username"]
 			return redirect(url_for("home"))
 		return "Login failed"
-	return render_template("login.html")
+	else:
+		return render_template("login.html")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -47,7 +50,26 @@ def register():
 @app.route("/help")
 def help():
 	pass
+
+
+@app.route("/ip", methods=["GET", "POST"])
+def registerIP():
+	global database
 	
+	if "username" in session:
+		if request.method == "POST":
+			ip = request.form["ip"]
+			client_ips = database.getClientIPs(session["username"])
+			if len(client_ips) == 0:
+				client_ips.append(ip)
+				print("added ip")
+			else:
+				print("too many ips")
+			return redirect(url_for("home"))
+		else:
+			return render_template("ip.html")
+	else:
+		return redirect(url_for("login"))
 	
 #updates the Jinja env globals with a function name
 def updateJinja(func):
@@ -97,5 +119,5 @@ if __name__ == "__main__":
 	
 	#recurringUpdate() #start the update cycle
 	
-	app.run(debug=True)
+	app.run()
 	database.saveUserData()
