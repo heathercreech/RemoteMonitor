@@ -12,3 +12,4 @@ Sanitize input into database
 LOW PRIORITY
 
 Get more info from the client
+Restrict IP registration to only valid IP addresses
