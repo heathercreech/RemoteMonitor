@@ -15,6 +15,9 @@ Allows monitoring of a remote computer's hardware through a web interface
 ## Current Plans
 (The following list is in no particular order)
 
+- Add support for multiple clients per user
+- Improve security
+- Improve user experience
 - Sanitize input before insertion into database
 
 
